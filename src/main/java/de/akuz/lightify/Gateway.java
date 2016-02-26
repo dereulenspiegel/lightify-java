@@ -242,7 +242,7 @@ public class Gateway {
     }
 
     public List<Light> getLights() {
-        return lights;
+        return Collections.unmodifiableList(lights);
     }
 
     public Luminary getLuminaryByName(String name) {
