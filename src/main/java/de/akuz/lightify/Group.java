@@ -78,7 +78,7 @@ public class Group extends Luminary {
 
     @Override
     protected byte[] getAddressBytes() {
-        return new byte[] { (byte) id };
+        return new byte[] { (byte) id, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
     }
 
 }

@@ -6,6 +6,10 @@ import java.nio.charset.Charset;
 
 public abstract class Luminary {
 
+    public interface ChangeListener {
+
+    }
+
     protected Gateway conn;
 
     protected Charset nameCharset;
@@ -61,6 +65,11 @@ public abstract class Luminary {
 
     public void setLuminance(byte value, short time) throws IOException {
         Packet command = new SetLuminance(this, value, time);
+        conn.send(command);
+    }
+
+    public void setColor(byte red, byte green, byte blue, short time) throws IOException {
+        Packet command = new SetColor(this, red, green, blue, time);
         conn.send(command);
     }
 
