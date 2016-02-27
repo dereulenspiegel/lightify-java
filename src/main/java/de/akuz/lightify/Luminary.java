@@ -73,6 +73,11 @@ public abstract class Luminary {
         conn.send(command);
     }
 
+    public void setTemperature(short temp, short time) throws IOException {
+        Packet command = new SetTemperature(this, temp, time);
+        conn.send(command);
+    }
+
     protected abstract byte[] getAddressBytes();
 
     protected ByteBuffer byteBufferWrap(byte[] data, int pos, int len) {
