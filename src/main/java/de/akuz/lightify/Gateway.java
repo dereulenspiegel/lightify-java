@@ -133,6 +133,9 @@ public class Gateway {
             case Packet.COMMAND_ONOFF:
                 updateOnOff(buf);
                 break;
+            case Packet.COMMAND_LUMINANCE:
+                // TODO we don't seem to get information about new luminance, probably this can be solved
+                break;
             case Packet.COMMAND_ALL_LIGHT_STATUS:
                 logger.debug("Received status for all lights");
                 updateAllLights(buf);

@@ -51,18 +51,6 @@ public class Light extends Luminary {
         updateStatus(byteBufferWrap(payload.array(), 10, 16));
     }
 
-    void updateStatus(ByteBuffer payload) {
-        payload.position(8);
-        byte onByte = payload.get();
-        lum = payload.get();
-        temp = payload.getShort();
-        red = payload.get();
-        green = payload.get();
-        blue = payload.get();
-
-        switchedOn = onByte == 0x01;
-    }
-
     public void update() throws IOException, InterruptedException {
         Packet updateStatus = new UpdateLightStatus(address);
         conn.send(updateStatus);
@@ -76,7 +64,7 @@ public class Light extends Luminary {
     }
 
     @Override
-    protected byte[] getAddressBytes() {
+    public byte[] getAddressBytes() {
         return address.address;
     }
 
