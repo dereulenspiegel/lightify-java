@@ -42,10 +42,6 @@ public abstract class Luminary {
         nameCharset = Charset.forName("ASCII");
     }
 
-    protected ByteBuffer receive() throws IOException {
-        return conn.receiveData();
-    }
-
     public void registerListener(ChangeListener l) {
         this.listeners.add(l);
     }
@@ -78,22 +74,22 @@ public abstract class Luminary {
         return Group.class.isAssignableFrom(this.getClass());
     }
 
-    public void setOn(boolean state) throws IOException {
+    public void setOn(boolean state) throws IOException, InterruptedException {
         Packet command = new OnOffCommand(this, state);
         conn.send(command);
     }
 
-    public void setLuminance(byte value, short time) throws IOException {
+    public void setLuminance(byte value, short time) throws IOException, InterruptedException {
         Packet command = new SetLuminance(this, value, time);
         conn.send(command);
     }
 
-    public void setColor(byte red, byte green, byte blue, short time) throws IOException {
+    public void setColor(byte red, byte green, byte blue, short time) throws IOException, InterruptedException {
         Packet command = new SetColor(this, red, green, blue, time);
         conn.send(command);
     }
 
-    public void setTemperature(short temp, short time) throws IOException {
+    public void setTemperature(short temp, short time) throws IOException, InterruptedException {
         Packet command = new SetTemperature(this, temp, time);
         conn.send(command);
     }
