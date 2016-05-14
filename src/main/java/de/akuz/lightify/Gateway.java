@@ -49,8 +49,7 @@ public class Gateway implements Runnable {
     private List<Group> groups = new ArrayList<Group>(50);
     private List<Light> lights = new ArrayList<Light>(128);
 
-    private ByteBuffer packetBuffer = ByteBuffer.allocate(4096);
-    private int expectedLength = 0;
+    private int expectedLength = -1;
 
     public Gateway(String host) {
         this(host, 4000);
@@ -58,7 +57,7 @@ public class Gateway implements Runnable {
 
     public Gateway(String host, int port) {
         this.address = new InetSocketAddress(host, port);
-        packetBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        readBuf.order(ByteOrder.LITTLE_ENDIAN);
     }
 
     public void connect() throws IOException {
@@ -245,15 +244,16 @@ public class Gateway implements Runnable {
     }
 
     private void onRead(ByteBuffer readBuf) {
-        packetBuffer.put(readBuf);
-        if (packetBuffer.position() > 1 && expectedLength == 0) {
-            expectedLength = packetBuffer.getChar();
+        readBuf.order(ByteOrder.LITTLE_ENDIAN);
+        if (readBuf.remaining() > 1 && expectedLength == -1) {
+            expectedLength = readBuf.getChar();
         }
-        if (packetBuffer.position() >= expectedLength) {
-            parseData(byteBufferWrap(packetBuffer.array(), 0, expectedLength));
-            packetBuffer.position(expectedLength);
-            packetBuffer.compact();
-            expectedLength = 0;
+        if (expectedLength != -1 && readBuf.limit() == expectedLength + 2) {
+            byte[] data = new byte[expectedLength + 2];
+            readBuf.position(0);
+            readBuf.get(data, 0, data.length);
+            parseData(byteBufferWrap(data, 0, expectedLength + 2));
+            expectedLength = -1;
         }
     }
 
